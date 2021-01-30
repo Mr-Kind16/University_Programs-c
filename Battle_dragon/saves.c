@@ -15,6 +15,7 @@ int salva(char *path_name,int pos,Drago vincitore)
                 //ritorna 1 se è stata salvata correttamente sennò 0
     Save *salvataggi;
     int esito=0,j;
+    
     int n=leggiSaves(path_name,salvataggi);
 
                 //non controlliamo la pos visto che lo controlliamo gia in precedenza 
@@ -31,14 +32,8 @@ int salva(char *path_name,int pos,Drago vincitore)
     salvataggi[pos-1].vincitori[j].dps=vincitore.dps;
 
     salvataggi[pos-1].vittorie++;
-    
 
-    if(upload_file(salvataggi,path_name,n))
-    {
-        esito=1;
-    }
-
-    return esito;
+    return  upload_file(salvataggi,path_name,n);
 }
 
 
@@ -46,7 +41,10 @@ int salva(char *path_name,int pos,Drago vincitore)
 void salvaVittoria(char *path_name,Drago vincitore)
 {               /*Funzione che salva una vittoria*/
     int scelta,esito=0;
-    int n=lineCounter(path_name);
+    FILE *fcon;
+    fcon=fopen(path_name,"rb");
+    int n=savesCounter(fcon);
+    fclose(fcon);
     
     if(n==0)
     {               //caso in cui il File è vuoto
@@ -55,15 +53,16 @@ void salvaVittoria(char *path_name,Drago vincitore)
         if(scelta)
         {
             crea_save(path_name);
-            esito=salva(path_name,n+1,vincitore)==1;
+            esito=salva(path_name,n+1,vincitore);
         }
     }
     else
     {             //caso in cui nel file ci sono dei salvataggi
         do{
-            printf("Ci sono %d salvataggi disponibili\nPuoi scerggliene uno col suo nuomero o crearne uno nuovo (0)\n",n);
+            printf("Ci sono %d salvataggi disponibili\nPuoi scergliene uno col suo nuomero o crearne uno nuovo (0)\n",n);
             scanf("%d",&scelta);
         }while((scelta<0) ||(scelta>n));
+
         if(scelta==0)
         {                           //se si vuole creare in nuovo salvataggio
             crea_save(path_name);
