@@ -2,12 +2,13 @@
 
 void crea_save(char *path_name)
 {                   //funzione che crea un nuovo salvataggio
-    int n_righe=lineCounter(path_name);
-    FILE *fcon=fopen(path_name,"a");
+    int n_saves;
+    Save *salvataggi=leggiSaves(path_name,&n_saves);;
 
-    fprintf(fcon,"%d %d\n",n_righe+1,0);
-
-    fclose(fcon);
+    Save nuovo_salvataggio;
+    nuovo_salvataggio.n_save=1;
+    nuovo_salvataggio.vittorie=0;
+    upload_file(salvataggi,path_name,n_saves+1,&nuovo_salvataggio);
 }
 
 int salva(char *path_name,int pos,Drago vincitore)
@@ -15,8 +16,8 @@ int salva(char *path_name,int pos,Drago vincitore)
                 //ritorna 1 se è stata salvata correttamente sennò 0
     Save *salvataggi;
     int esito=0,j;
-    
-    int n=leggiSaves(path_name,salvataggi);
+    int n;
+    salvataggi=leggiSaves(path_name,&n);
 
                 //non controlliamo la pos visto che lo controlliamo gia in precedenza 
     if(salvataggi[pos-1].vittorie==3)
@@ -25,15 +26,13 @@ int salva(char *path_name,int pos,Drago vincitore)
     }
 
     j=salvataggi[pos-1].vittorie;
-
-    salvataggi[pos-1].vincitori[j].nome=xmalloc(strlen(vincitore.nome+1));
     strcpy(salvataggi[pos-1].vincitori[j].nome,vincitore.nome);
     salvataggi[pos-1].vincitori[j].vita=vincitore.vita;
     salvataggi[pos-1].vincitori[j].dps=vincitore.dps;
 
     salvataggi[pos-1].vittorie++;
-
-    return  upload_file(salvataggi,path_name,n);
+    stampaSalvataggi(salvataggi,n);
+    return  upload_file(salvataggi,path_name,n,NULL);
 }
 
 

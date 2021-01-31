@@ -15,16 +15,19 @@ void apri_crea(char data_path[])
     fclose(fcon);
 }
 
-int leggiSaves(char *path_name,Save *salvataggi)
+Save *leggiSaves(char *path_name,int *n_saves)
 {                       /*funzione che legge tutti i saves e riempie una struttura di 
                         Save*/
     int n_righe;
     FILE *fcon=fopen(path_name,"rb");
     n_righe=savesCounter(fcon);
-    salvataggi=xmalloc(n_righe*sizeof(Save));
+
+    Save *salvataggi=xmalloc(n_righe*sizeof(Save));
+    printf("save\n");
     fread(salvataggi,sizeof(Save),n_righe,fcon);
     fclose(fcon);
-    return n_righe;
+
+    return salvataggi;
 }
 int savesCounter(FILE *fcon)
 {   
@@ -52,13 +55,17 @@ void stampaSalvataggi(Save *salvataggi,int n)
     }
 }
 
-int upload_file(Save *salvataggi,char *path_name,int n)
+int upload_file(Save *salvataggi,char *path_name,int n,Save *nuovo_salvataggio)
 {
     FILE *fcon=fopen(path_name,"wb");
     
     fwrite(&n,sizeof(int),1,fcon);
     fwrite(salvataggi,sizeof(Save),n,fcon);
 
+    if(nuovo_salvataggio!=NULL)
+    {
+        fwrite(nuovo_salvataggio,sizeof(Save),1,fcon);
+    }
     fclose(fcon);
     return 1;
 }

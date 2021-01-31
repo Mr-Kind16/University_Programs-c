@@ -6,9 +6,7 @@ void sceltaStatsDrago(Drago *d)
     char nome[LUN_MAX_NOMI];
 
     printf("Inserisci il Nome del drago\n");
-    scanf("%s",nome);
-    d->nome=xmalloc(strlen(nome)+1);
-    strcpy(d->nome,nome);
+    scanf("%s",d->nome);
 
     do{
         printf("Inserisci quanta vita ha il drago(multipli di 1000):\n");
@@ -32,7 +30,7 @@ int sceltaVincitore(Drago d1,Drago d2)
         printf("Situazione attuale:\n%s Ha %d LF\n %s Ha %d LF \n",d1.nome,d1.vita,d2.nome,d2.vita);
 
         printf("*********ROUND :%d**********\nChi attaccherà?\n",++i);
-        suspense();
+        //suspense();
 
         if(rand()%2)
         {
